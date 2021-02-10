@@ -1,3 +1,4 @@
+import FungibleToken from 0xFUNGIBLETOKENADDRESS
 import RevvToken from 0xREVVTOKENADDRESS
 
 pub contract TeleportCustody {
@@ -74,9 +75,9 @@ pub contract TeleportCustody {
   }
 
   pub resource interface TeleportControl {
-    pub fun teleportIn(amount: UFix64, from: [UInt8], hash: String): @RevvToken.Vault
+    pub fun teleportIn(amount: UFix64, from: [UInt8], hash: String): @FungibleToken.Vault
 
-    pub fun withdrawFee(amount: UFix64): @RevvToken.Vault
+    pub fun withdrawFee(amount: UFix64): @FungibleToken.Vault
     
     pub fun updateInwardFee(fee: UFix64)
 
@@ -121,7 +122,7 @@ pub contract TeleportCustody {
     // Function that release REVV tokens from custody,
     // and returns them to the calling context.
     //
-    pub fun teleportIn(amount: UFix64, from: [UInt8], hash: String): @RevvToken.Vault {
+    pub fun teleportIn(amount: UFix64, from: [UInt8], hash: String): @FungibleToken.Vault {
       pre {
         !TeleportCustody.isFrozen: "Teleport service is frozen"
         amount <= self.allowedAmount: "Amount teleported must be less than the allowed amount"
@@ -157,17 +158,18 @@ pub contract TeleportCustody {
         to.length == 20: "Ethereum address should be 20 bytes"
       }
 
-      let vault <- from as! @TeleportCustody.Vault
+      let vault <- from as! @RevvToken.Vault
       let fee <- vault.withdraw(amount: self.outwardFee)
 
       self.feeCollector.deposit(from: <-fee)
       emit FeeCollected(amount: self.outwardFee, type: 0)
 
+      let amount = vault.balance
       TeleportCustody.revvVault.deposit(from: <- vault)
       emit TokensTeleportedOut(amount: amount, to: to)
     }
 
-    pub fun withdrawFee(amount: UFix64): @RevvToken.Vault {
+    pub fun withdrawFee(amount: UFix64): @FungibleToken.Vault {
       return <- self.feeCollector.withdraw(amount: amount)
     }
 

@@ -2,7 +2,7 @@ import FungibleToken from 0xFUNGIBLETOKENADDRESS
 
 pub contract RevvToken: FungibleToken {
 
-  // Total supply of Flow tokens in existence
+  // Total supply of REVV tokens in existence
   pub var totalSupply: UFix64
 
   // Event that is emitted when the contract is created
@@ -71,7 +71,7 @@ pub contract RevvToken: FungibleToken {
     // was a temporary holder of the tokens. The Vault's balance has
     // been consumed and therefore can be destroyed.
     pub fun deposit(from: @FungibleToken.Vault) {
-      let vault <- from as! @FlowToken.Vault
+      let vault <- from as! @RevvToken.Vault
       self.balance = self.balance + vault.balance
       emit TokensDeposited(amount: vault.balance, to: self.owner?.address)
       vault.balance = 0.0
@@ -79,7 +79,7 @@ pub contract RevvToken: FungibleToken {
     }
 
     destroy() {
-      FlowToken.totalSupply = FlowToken.totalSupply - self.balance
+      RevvToken.totalSupply = RevvToken.totalSupply - self.balance
     }
   }
 
@@ -128,12 +128,12 @@ pub contract RevvToken: FungibleToken {
     // Function that mints new tokens, adds them to the total supply,
     // and returns them to the calling context.
     //
-    pub fun mintTokens(amount: UFix64): @FlowToken.Vault {
+    pub fun mintTokens(amount: UFix64): @RevvToken.Vault {
       pre {
-          amount > UFix64(0): "Amount minted must be greater than zero"
+          amount > 0.0: "Amount minted must be greater than zero"
           amount <= self.allowedAmount: "Amount minted must be less than the allowed amount"
       }
-      FlowToken.totalSupply = FlowToken.totalSupply + amount
+      RevvToken.totalSupply = RevvToken.totalSupply + amount
       self.allowedAmount = self.allowedAmount - amount
       emit TokensMinted(amount: amount)
       return <-create Vault(balance: amount)
@@ -158,7 +158,7 @@ pub contract RevvToken: FungibleToken {
     // total supply in the Vault destructor.
     //
     pub fun burnTokens(from: @FungibleToken.Vault) {
-      let vault <- from as! @FlowToken.Vault
+      let vault <- from as! @RevvToken.Vault
       let amount = vault.balance
       destroy vault
       emit TokensBurned(amount: amount)
@@ -176,7 +176,7 @@ pub contract RevvToken: FungibleToken {
     // Create a public capability to the stored Vault that only exposes
     // the `deposit` method through the `Receiver` interface
     //
-    self.account.link<&FlowToken.Vault{FungibleToken.Receiver}>(
+    self.account.link<&RevvToken.Vault{FungibleToken.Receiver}>(
         /public/revvTokenReceiver,
         target: /storage/revvTokenVault
     )
@@ -184,7 +184,7 @@ pub contract RevvToken: FungibleToken {
     // Create a public capability to the stored Vault that only exposes
     // the `balance` field through the `Balance` interface
     //
-    self.account.link<&FlowToken.Vault{FungibleToken.Balance}>(
+    self.account.link<&RevvToken.Vault{FungibleToken.Balance}>(
         /public/revvTokenBalance,
         target: /storage/revvTokenVault
     )
@@ -196,4 +196,3 @@ pub contract RevvToken: FungibleToken {
     emit TokensInitialized(initialSupply: self.totalSupply)
   }
 }
- 
