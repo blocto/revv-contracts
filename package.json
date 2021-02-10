@@ -1,10 +1,10 @@
 {
-  "name": "flowswap-contracts",
+  "name": "revv-contracts",
   "version": "0.0.1",
-  "description": "Cadence and Solidity contracts used in FlowSwap",
+  "description": "Cadence and Solidity contracts used in REVV teleport",
   "repository": {
     "type": "git",
-    "url": "git://github.com/portto/flowswap-contracts.git"
+    "url": "git://github.com/portto/revv-contracts.git"
   },
   "author": "portto",
   "license": "MIT",

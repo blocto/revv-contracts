@@ -2,9 +2,8 @@
 
 pragma solidity 0.6.12;
 
-// import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./TeleportAdmin.sol";
-import "./TetherToken.sol";
 
 /**
  * @dev Implementation of the TeleportCustody contract.
@@ -23,12 +22,9 @@ import "./TetherToken.sol";
  * Admin: Has the authority to "unlock" specific amount to tokens to receivers.
  */
 contract TeleportCustody is TeleportAdmin {
-  // USDC
-  // ERC20 internal _tokenContract = ERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+  // REVV
+  ERC20 internal _tokenContract = ERC20(0x557B933a7C2c45672B610F8954A3deB39a51A8Ca);
   
-  // USDT
-  TetherToken internal _tokenContract = TetherToken(0xdAC17F958D2ee523a2206206994597C13D831ec7);
-
   // Records that an unlock transaction has been executed
   mapping(bytes32 => bool) internal _unlocked;
   
@@ -47,8 +43,8 @@ contract TeleportCustody is TeleportAdmin {
   {
     address sender = _msgSender();
 
-    // NOTE: Return value should be checked. However, Tether does not have return value.
-    _tokenContract.transferFrom(sender, address(this), amount);
+    bool result = _tokenContract.transferFrom(sender, address(this), amount);
+    require(result, "TeleportCustody: transferFrom returns falsy value");
 
     emit Locked(amount, flowAddress, sender);
   }
@@ -97,8 +93,8 @@ contract TeleportCustody is TeleportAdmin {
 
     _unlocked[flowHash] = true;
 
-    // NOTE: Return value should be checked. However, Tether does not have return value.
-    _tokenContract.transfer(ethereumAddress, amount);
+    bool result = _tokenContract.transfer(ethereumAddress, amount);
+    require(result, "TeleportCustody: transfer returns falsy value");
 
     emit Unlocked(amount, ethereumAddress, flowHash);
   }

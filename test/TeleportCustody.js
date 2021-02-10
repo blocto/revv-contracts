@@ -1,5 +1,5 @@
 const TeleportCustodyTest = artifacts.require('TeleportCustodyTest');
-const TetherTokenTest = artifacts.require("TetherTokenTest");
+const REVVTokenTest = artifacts.require("REVVTokenTest");
 
 async function tryCatch(promise, reason) {
   try {
@@ -11,7 +11,7 @@ async function tryCatch(promise, reason) {
   }
 };
 
-contract('TeleportCustody (USDT) Tests', (accounts) => {
+contract('TeleportCustody (REVV) Tests', (accounts) => {
   let teleportCustody;
 
   const owner = accounts[0];
@@ -20,7 +20,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
   const user = accounts[3];
 
   beforeEach('setup contract for each test', async () => {
-    teleportCustody = await TeleportCustodyTest.new(TetherTokenTest.address);
+    teleportCustody = await TeleportCustodyTest.new(REVVTokenTest.address);
   });
 
   describe('TeleportAdmin', () => {
@@ -114,7 +114,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
       it('can lock tokens from users', async () => {
         const { receipt: { rawLogs }, logs } = await teleportCustody.lock(100, '0x0000', { from: user });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Locked');
@@ -151,7 +151,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
         await teleportCustody.updateAdmin(adminOne, 500, { from: owner });
         const { receipt: { rawLogs }, logs } = await teleportCustody.unlock(100, user, '0x0000', { from: adminOne });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Unlocked');
@@ -163,7 +163,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
         await teleportCustody.unlock(100, user, '0x0000', { from: adminOne });
         const { receipt: { rawLogs }, logs } = await teleportCustody.unlock(100, user, '0x0001', { from: adminOne });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Unlocked');
@@ -227,7 +227,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
 
         const { receipt: { rawLogs }, logs } = await teleportCustody.unlock(100, user, '0x0000', { from: adminOne });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Unlocked');
@@ -239,7 +239,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
       it('should unlock', async () => {
         const { receipt: { rawLogs }, logs } = await teleportCustody.unlockByOwner(100, user, '0x0000', { from: owner });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Unlocked');
@@ -249,7 +249,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
         await teleportCustody.unlockByOwner(100, user, '0x0000', { from: owner });
         const { receipt: { rawLogs }, logs } = await teleportCustody.unlockByOwner(100, user, '0x0001', { from: owner });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Unlocked');
@@ -295,7 +295,7 @@ contract('TeleportCustody (USDT) Tests', (accounts) => {
 
         const { receipt: { rawLogs }, logs } = await teleportCustody.unlockByOwner(100, user, '0x0000', { from: owner });
 
-        const transferEvents = rawLogs.filter(event => event.address === TetherTokenTest.address);
+        const transferEvents = rawLogs.filter(event => event.address === REVVTokenTest.address);
 
         assert.equal(transferEvents.length, 1);
         assert.equal(logs[0].event, 'Unlocked');

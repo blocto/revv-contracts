@@ -57,17 +57,6 @@ module.exports = {
       // from: <address>,        // Account to send txs from (default: accounts[0])
       // websockets: true        // Enable EventEmitter interface for web3 (default: false)
     // },
-
-    // Useful for deploying to a public network.
-    // NB: It's important to wrap the provider as a function.
-    tangerine: {
-      provider: () => new HDWalletProvider(mnemonic, `https://testnet-rpc.tangerine-network.io`),
-      network_id: 374,     // Tangerine testnet id
-      gas: 5500000,
-      confirmations: 1,    // # of confs to wait between deployments. (default: 0)
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    },
   },
 
   // Set default mocha options here, use special reporters etc.

@@ -2,13 +2,13 @@
 
 pragma solidity 0.6.12;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./TeleportCustody.sol";
-import "./TetherToken.sol";
 
 contract TeleportCustodyTest is TeleportCustody {
-  constructor(address tetherTokenAddress) 
+  constructor(address revvTokenAddress) 
     public
   {
-    _tokenContract = TetherToken(tetherTokenAddress);
+    _tokenContract = ERC20(revvTokenAddress);
   }
 }
