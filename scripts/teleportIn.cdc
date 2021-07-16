@@ -10,7 +10,7 @@ transaction(amount: UFix64, target: Address, from: String, hash: String) {
     
     let vault <- teleportControlRef.teleportIn(amount: amount, from: from.decodeHex(), hash: hash)
 
-    let receiverRef = getAccount(target).getCapability(/public/revvTokenReceiver)!
+    let receiverRef = getAccount(target).getCapability(RevvToken.RevvTokenReceiverPublicPath)!
         .borrow<&RevvToken.Vault{FungibleToken.Receiver}>()
         ?? panic("Could not borrow a reference to Receiver")
 

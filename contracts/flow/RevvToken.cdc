@@ -26,6 +26,21 @@ pub contract RevvToken: FungibleToken {
   // Event that is emitted when a new burner resource is created
   pub event BurnerCreated()
 
+  // The public path for the token balance
+  pub let RevvTokenBalancePublicPath: PublicPath
+
+  // The public path for the token receiver
+  pub let RevvTokenReceiverPublicPath: PublicPath
+
+  // The private path for the token vault
+  pub let RevvTokenVaultPrivatePath: PrivatePath
+
+  // The storage path for the token vault
+  pub let RevvTokenVaultStoragePath: StoragePath
+
+  // The storage path for the admin resource
+  pub let RevvTokenAdminStoragePath: StoragePath
+
   // Vault
   //
   // Each user stores an instance of only the Vault in their storage
@@ -166,31 +181,44 @@ pub contract RevvToken: FungibleToken {
   }
 
   init() {
+
+    //Initialize the path fields
+    //
+    self.RevvTokenBalancePublicPath = /public/revvTokenBalance
+
+    self.RevvTokenReceiverPublicPath = /public/revvTokenReceiver
+
+    self.RevvTokenVaultPrivatePath = /private/revvTokenVault
+
+    self.RevvTokenVaultStoragePath = /storage/revvTokenVault
+
+    self.RevvTokenAdminStoragePath = /storage/revvTokenAdmin
+
     self.totalSupply = 0.0
 
     // Create the Vault with the total supply of tokens and save it in storage
     //
     let vault <- create Vault(balance: self.totalSupply)
-    self.account.save(<-vault, to: /storage/revvTokenVault)
+    self.account.save(<-vault, to: self.RevvTokenVaultStoragePath)
 
     // Create a public capability to the stored Vault that only exposes
     // the `deposit` method through the `Receiver` interface
     //
     self.account.link<&RevvToken.Vault{FungibleToken.Receiver}>(
-        /public/revvTokenReceiver,
-        target: /storage/revvTokenVault
+        self.RevvTokenReceiverPublicPath,
+        target: self.RevvTokenVaultStoragePath
     )
 
     // Create a public capability to the stored Vault that only exposes
     // the `balance` field through the `Balance` interface
     //
     self.account.link<&RevvToken.Vault{FungibleToken.Balance}>(
-        /public/revvTokenBalance,
-        target: /storage/revvTokenVault
+        self.RevvTokenBalancePublicPath,
+        target: self.RevvTokenVaultStoragePath
     )
 
     let admin <- create Administrator()
-    self.account.save(<-admin, to: /storage/revvTokenAdmin)
+    self.account.save(<-admin, to: self.RevvTokenAdminStoragePath)
 
     // Emit an event that shows that the contract was initialized
     emit TokensInitialized(initialSupply: self.totalSupply)
