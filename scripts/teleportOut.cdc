@@ -8,7 +8,7 @@ transaction(amount: UFix64, target: String) {
         .borrow<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportUser}>()
         ?? panic("Could not borrow a reference to TeleportUser")
 
-    let vaultRef = signer.borrow<&RevvToken.Vault>(from: /storage/revvTokenVault)
+    let vaultRef = signer.borrow<&RevvToken.Vault>(from: RevvToken.RevvTokenVaultStoragePath)
         ?? panic("Could not borrow a reference to the vault resource")
 
     let vault <- vaultRef.withdraw(amount: amount);
