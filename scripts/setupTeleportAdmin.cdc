@@ -1,24 +1,24 @@
 import FungibleToken from 0xFUNGIBLETOKENADDRESS
 import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
 
-transaction {
+transaction(amount: UFix64) {
   prepare(admin: AuthAccount, teleportAdmin: AuthAccount) {
 
-    let adminRef = admin.borrow<&TeleportCustody.Administrator>(from: /storage/revvTeleportCustodyAdmin)
+    let adminRef = admin.borrow<&TeleportCustody.Administrator>(from: TeleportCustody.AdminStoragePath)
         ?? panic("Could not borrow a reference to the admin resource")
 
-    let teleportAdminRes <- adminRef.createNewTeleportAdmin()
+    let teleportAdminRes <- adminRef.createNewTeleportAdmin(allowedAmount: amount)
 
-    teleportAdmin.save(<- teleportAdminRes, to: /storage/revvTeleportCustodyTeleportAdmin)
+    teleportAdmin.save(<- teleportAdminRes, to: TeleportCustody.TeleportAdminStoragePath)
 
     teleportAdmin.link<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportUser}>(
-      /public/revvTeleportCustodyTeleportUser,
-      target: /storage/revvTeleportCustodyTeleportAdmin
+      TeleportCustody.TeleportUserPublicPath,
+      target: TeleportCustody.TeleportAdminStoragePath
     )
 
-    teleportAdmin.link<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportAdmin}>(
-      /private/revvTeleportCustodyTeleportAdmin,
-      target: /storage/revvTeleportCustodyTeleportAdmin
+    teleportAdmin.link<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportControl}>(
+      TeleportCustody.TeleportAdminPrivatePath,
+      target: TeleportCustody.TeleportAdminStoragePath
     )
   }
 }

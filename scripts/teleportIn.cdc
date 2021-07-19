@@ -4,7 +4,7 @@ import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
 
 transaction(amount: UFix64, target: Address, from: String, hash: String) {
   prepare(teleportAdmin: AuthAccount) {
-    let teleportControlRef = teleportAdmin.getCapability(/private/revvTeleportCustodyTeleportAdmin)!
+    let teleportControlRef = teleportAdmin.getCapability(TeleportCustody.TeleportAdminPrivatePath)!
         .borrow<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportControl}>()
         ?? panic("Could not borrow a reference to TeleportControl")
     
