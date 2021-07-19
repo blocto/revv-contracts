@@ -3,6 +3,9 @@ Cadence and Solidity contracts used in REVV Teleport
 
 Flow Playground: https://play.onflow.org/8afc7ece-5e1c-4be1-a80d-1fdaa955c133?type=account&id=0
 
+## Preparation
+Get [Flow CLI](https://docs.onflow.org/flow-cli/install/) for development and deployment.
+
 ## Deployment
 Deploy the updated contracts to Flow testnet with Flow CLI.
 The accounts to deploy to are defined in `flow.json`
