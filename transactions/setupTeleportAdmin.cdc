@@ -1,5 +1,4 @@
-import FungibleToken from 0xFUNGIBLETOKENADDRESS
-import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
+import TeleportCustody from "../contracts/flow/TeleportCustody.cdc"
 
 transaction(amount: UFix64) {
   prepare(admin: AuthAccount, teleportAdmin: AuthAccount) {

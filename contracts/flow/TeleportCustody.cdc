@@ -1,5 +1,5 @@
-import FungibleToken from 0xFUNGIBLETOKENADDRESS
-import RevvToken from 0xREVVTOKENADDRESS
+import FungibleToken from "./FungibleToken.cdc"
+import RevvToken from "./RevvToken.cdc"
 
 pub contract TeleportCustody {
   // Frozen flag controlled by Admin
