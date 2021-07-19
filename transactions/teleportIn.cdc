@@ -1,6 +1,6 @@
-import FungibleToken from 0xFUNGIBLETOKENADDRESS
-import RevvToken from 0xREVVTOKENADDRESS
-import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
+import FungibleToken from "../contracts/flow/FungibleToken.cdc"
+import RevvToken from "../contracts/flow/RevvToken.cdc"
+import TeleportCustody from "../contracts/flow/TeleportCustody.cdc"
 
 transaction(amount: UFix64, target: Address, from: String, hash: String) {
   prepare(teleportAdmin: AuthAccount) {

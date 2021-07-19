@@ -1,10 +1,10 @@
-import FungibleToken from 0xFUNGIBLETOKENADDRESS
-import RevvToken from 0xREVVTOKENADDRESS
-import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
+import FungibleToken from "../contracts/flow/FungibleToken.cdc"
+import RevvToken from "../contracts/flow/RevvToken.cdc"
+import TeleportCustody from "../contracts/flow/TeleportCustody.cdc"
 
-transaction(amount: UFix64, target: String) {
+transaction(teleportAdminAddress: Address, amount: UFix64, target: String) {
   prepare(signer: AuthAccount) {
-    let teleportUserRef = getAccount(0xf086a545ce3c552d).getCapability(TeleportCustody.TeleportUserPublicPath)!
+    let teleportUserRef = getAccount(teleportAdminAddress).getCapability(TeleportCustody.TeleportUserPublicPath)!
         .borrow<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportUser}>()
         ?? panic("Could not borrow a reference to TeleportUser")
 
