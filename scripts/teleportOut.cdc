@@ -11,7 +11,7 @@ transaction(amount: UFix64, target: String) {
     let vaultRef = signer.borrow<&RevvToken.Vault>(from: RevvToken.RevvTokenVaultStoragePath)
         ?? panic("Could not borrow a reference to the vault resource")
 
-    let vault <- vaultRef.withdraw(amount: amount);
+    let vault <- vaultRef.withdraw(amount: amount) as! @RevvToken.Vault;
     
     teleportUserRef.teleportOut(from: <- vault, to: target.decodeHex())
   }
