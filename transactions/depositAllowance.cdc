@@ -1,6 +1,6 @@
-import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
+import TeleportCustody from "../contracts/flow/TeleportCustody.cdc"
 
-transaction(teleportAdmin: Address, allowedAmount: UFix64) {
+transaction(teleportAdminAddress: Address, allowedAmount: UFix64) {
   prepare(admin: AuthAccount) {
 
     let adminRef = admin.borrow<&TeleportCustody.Administrator>(from: TeleportCustody.AdminStoragePath)
@@ -8,7 +8,7 @@ transaction(teleportAdmin: Address, allowedAmount: UFix64) {
 
     let allowance <- adminRef.createAllowance(allowedAmount: allowedAmount)
 
-    let teleportUserRef = getAccount(teleportAdmin).getCapability(TeleportCustody.TeleportUserPublicPath)!
+    let teleportUserRef = getAccount(teleportAdminAddress).getCapability(TeleportCustody.TeleportUserPublicPath)!
         .borrow<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportUser}>()
         ?? panic("Could not borrow a reference to TeleportUser")
 
