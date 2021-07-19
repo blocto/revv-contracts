@@ -1,10 +1,24 @@
 {
-	"accounts": {
-		"service": {
-			"address": "f086a545ce3c552d",
-			"privateKey": "dcc3a1c64beb8f8f4b5f63cd56804d3b8234a6d29da7c0b5ed2a0e82c076b8e0",
-			"sigAlgorithm": "ECDSA_P256",
-			"hashAlgorithm": "SHA3_256"
+	"emulators": {
+		"default": {
+			"port": 3569,
+			"serviceAccount": "emulator-account"
 		}
-	}
+	},
+	"contracts": {
+		"RevvToken": "./contracts/flow/RevvToken.cdc",
+		"TeleportCustody": "./contracts/flow/TeleportCustody.cdc"
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"keys": "a3fedbc0837fc67cac491f704508e82e590ac32eaad3ef7ec2cac492f5ce734a"
+		}
+	},
+	"deployments": {}
 }
