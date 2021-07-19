@@ -4,14 +4,14 @@ import TeleportCustody from 0xREVVTELEPORTCUSTODYADDRESS
 
 transaction(amount: UFix64, target: String) {
   prepare(signer: AuthAccount) {
-    let teleportUserRef = getAccount(0xf086a545ce3c552d).getCapability(/public/revvTeleportCustodyTeleportUser)!
+    let teleportUserRef = getAccount(0xf086a545ce3c552d).getCapability(TeleportCustody.TeleportUserPublicPath)!
         .borrow<&TeleportCustody.TeleportAdmin{TeleportCustody.TeleportUser}>()
         ?? panic("Could not borrow a reference to TeleportUser")
 
     let vaultRef = signer.borrow<&RevvToken.Vault>(from: RevvToken.RevvTokenVaultStoragePath)
         ?? panic("Could not borrow a reference to the vault resource")
 
-    let vault <- vaultRef.withdraw(amount: amount);
+    let vault <- vaultRef.withdraw(amount: amount) as! @RevvToken.Vault;
     
     teleportUserRef.teleportOut(from: <- vault, to: target.decodeHex())
   }
