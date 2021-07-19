@@ -23,6 +23,18 @@ pub contract TeleportCustody {
   // Event that is emitted when a new burner resource is created
   pub event TeleportAdminCreated(allowedAmount: UFix64)
 
+  // The storage path for the admin resource (equivalent to root)
+  pub let AdminStoragePath: StoragePath
+
+  // The storage path for the teleport-admin resource (less priviledged than admin)  
+  pub let TeleportAdminStoragePath: StoragePath
+
+  // The private path for the teleport-admin resource
+  pub let TeleportAdminPrivatePath: PrivatePath 
+
+  // The public path for the teleport user
+  pub let TeleportUserPublicPath: PublicPath 
+
   pub resource Allowance {
     pub var balance: UFix64
 
@@ -218,10 +230,17 @@ pub contract TeleportCustody {
     self.isFrozen = false
     self.teleported = {}
 
+    // Initialize the path fields
+    //
+    self.AdminStoragePath = /storage/revvTeleportCustodyAdmin
+    self.TeleportAdminStoragePath = /storage/revvTeleportCustodyTeleportAdmin
+    self.TeleportUserPublicPath = /public/revvTeleportCustodyTeleportUser
+    self.TeleportAdminPrivatePath = /private/revvTeleportCustodyTeleportAdmin
+
     // Setup internal RevvToken vault
     self.revvVault <- RevvToken.createEmptyVault() as! @RevvToken.Vault
 
     let admin <- create Administrator()
-    self.account.save(<-admin, to: /storage/revvTeleportCustodyAdmin)
+    self.account.save(<-admin, to: self.AdminStoragePath)
   }
 }
