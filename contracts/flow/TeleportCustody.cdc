@@ -2,14 +2,6 @@ import FungibleToken from "./FungibleToken.cdc"
 import RevvToken from "./RevvToken.cdc"
 
 pub contract TeleportCustody {
-  // Frozen flag controlled by Admin
-  pub var isFrozen: Bool
-
-  // Record teleported Ethereum hashes
-  pub var teleported: {String: Bool}
-
-  // Controls RevvToken vault
-  access(contract) let revvVault: @RevvToken.Vault
 
   // Event that is emitted when new tokens are teleported in from Ethereum (from: Ethereum Address, 20 bytes)
   pub event TokensTeleportedIn(amount: UFix64, from: [UInt8], hash: String)
@@ -34,6 +26,15 @@ pub contract TeleportCustody {
 
   // The public path for the teleport user
   pub let TeleportUserPublicPath: PublicPath 
+
+  // Frozen flag controlled by Admin
+  pub var isFrozen: Bool
+
+  // Record teleported Ethereum hashes
+  access(contract) var teleported: {String: Bool}
+
+  // Controls RevvToken vault
+  access(contract) let revvVault: @RevvToken.Vault
 
   pub resource Allowance {
     pub var balance: UFix64
@@ -65,6 +66,19 @@ pub contract TeleportCustody {
 
     pub fun createAllowance(allowedAmount: UFix64): @Allowance {
       return <- create Allowance(balance: allowedAmount)
+    }
+
+    // deposit
+    // 
+    // Function that deposits REVV token into the contract controlled
+    // vault.
+    //
+    pub fun depositRevv(from: @RevvToken.Vault) {
+      TeleportCustody.revvVault.deposit(from: <- from)
+    }
+
+    pub fun withdrawRevv(amount: UFix64): @FungibleToken.Vault {
+      return <- TeleportCustody.revvVault.withdraw(amount: amount)
     }
   }
 
@@ -119,15 +133,6 @@ pub contract TeleportCustody {
 
     // corresponding controller account on Ethereum
     pub var ethereumAdminAccount: [UInt8]
-
-    // deposit
-    // 
-    // Function that deposits REVV token into the contract controlled
-    // vault.
-    //
-    pub fun deposit(from: @RevvToken.Vault) {
-      TeleportCustody.revvVault.deposit(from: <- from)
-    }
 
     // teleportIn
     //
@@ -226,16 +231,21 @@ pub contract TeleportCustody {
     }
   }
 
+  pub fun getRevvBalance(): UFix64 {
+    return TeleportCustody.revvVault.balance
+  }
+
   init() {
-    self.isFrozen = false
-    self.teleported = {}
 
     // Initialize the path fields
-    //
     self.AdminStoragePath = /storage/revvTeleportCustodyAdmin
     self.TeleportAdminStoragePath = /storage/revvTeleportCustodyTeleportAdmin
     self.TeleportUserPublicPath = /public/revvTeleportCustodyTeleportUser
     self.TeleportAdminPrivatePath = /private/revvTeleportCustodyTeleportAdmin
+
+    // Initialize contract variables
+    self.isFrozen = false
+    self.teleported = {}
 
     // Setup internal RevvToken vault
     self.revvVault <- RevvToken.createEmptyVault() as! @RevvToken.Vault
