@@ -14,7 +14,12 @@
 				"mainnet": "0xf233dcee88fe0abe"
 			}
 		},
-		"RevvToken": "./contracts/flow/RevvToken.cdc",
+		"RevvToken": {
+			"source": "./contracts/flow/RevvToken.cdc",
+			"aliases": {
+				"testnet": "0xe4106d2094661b92"
+			}
+		},
 		"TeleportCustody": "./contracts/flow/TeleportCustody.cdc"
 	},
 	"networks": {
@@ -28,7 +33,7 @@
 			"keys": "a3fedbc0837fc67cac491f704508e82e590ac32eaad3ef7ec2cac492f5ce734a"
 		},
 		"revv-admin-testnet": {
-			"address": "d26e915a5ca720cd",
+			"address": "e9008c00f410c92b",
 			"keys": [
 				{
 					"type": "hex",
@@ -36,7 +41,7 @@
 					"signatureAlgorithm": "ECDSA_secp256k1",
 					"hashAlgorithm": "SHA3_256",
 					"context": {
-						"privateKey": "d54b91efca4c90c3a86dd4c8c16d0153a9ab338cb73c8bee62ea51499ac33e96"
+						"privateKey": "6c5726cb889f8882dce508406f6f28398267da7215440c5ee8cfa5206a311bc8"
 					}
 				}
 			],
@@ -61,7 +66,6 @@
 	"deployments": {
 		"testnet": {
 			"revv-admin-testnet": [
-				"RevvToken",
 				"TeleportCustody"
 			]
 		}
