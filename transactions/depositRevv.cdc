@@ -1,4 +1,4 @@
-import RevvToken from "../contracts/flow/RevvToken"
+import RevvToken from "../contracts/flow/RevvToken.cdc"
 import TeleportCustody from "../contracts/flow/TeleportCustody.cdc"
 
 transaction(amount: UFix64) {
@@ -12,6 +12,6 @@ transaction(amount: UFix64) {
 
     let revvVault <- revvVaultRef.withdraw(amount: amount)
 
-    adminRef.depositRevv(from: revvVault)
+    adminRef.depositRevv(from: <- (revvVault as! @RevvToken.Vault))
   }
 }
