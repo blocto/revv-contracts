@@ -1,4 +1,4 @@
-import RevvToken from "../contracts/flow/RevvToken.cdc"
+import REVV from "../contracts/flow/REVV.cdc"
 import TeleportCustody from "../contracts/flow/TeleportCustody.cdc"
 
 transaction(amount: UFix64) {
@@ -7,11 +7,11 @@ transaction(amount: UFix64) {
     let adminRef = admin.borrow<&TeleportCustody.Administrator>(from: TeleportCustody.AdminStoragePath)
       ?? panic("Could not borrow a reference to the admin resource")
 
-    let revvVaultRef = admin.borrow<&RevvToken.Vault>(from: RevvToken.RevvTokenVaultStoragePath)
+    let revvVaultRef = admin.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath)
       ?? panic("Could not borrow a reference to the REVV vault")
 
     let revvVault <- revvVaultRef.withdraw(amount: amount)
 
-    adminRef.depositRevv(from: <- (revvVault as! @RevvToken.Vault))
+    adminRef.depositRevv(from: <- (revvVault as! @REVV.Vault))
   }
 }
