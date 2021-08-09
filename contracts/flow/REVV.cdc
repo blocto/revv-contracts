@@ -29,6 +29,9 @@ pub contract REVV: FungibleToken {
   // The storage path for the token vault
   pub let RevvVaultStoragePath: StoragePath
 
+  // The private path for the token vault
+  pub let RevvVaultPrivatePath: PrivatePath
+
   // The escrow vault for REVV from REVV vaults that were detroyed
   access(account) let escrowVault: @REVV.Vault
 
@@ -156,6 +159,8 @@ pub contract REVV: FungibleToken {
     self.RevvReceiverPublicPath = /public/revvReceiver
 
     self.RevvVaultStoragePath = /storage/revvVault
+
+    self.RevvVaultPrivatePath = /private/revvVault
 
     // create an escrow vault
     //
