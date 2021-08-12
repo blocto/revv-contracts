@@ -1,5 +1,4 @@
 import FungibleToken from "./FungibleToken.cdc"
-
 pub contract REVV: FungibleToken {
 
   // Max REVV supply
@@ -20,6 +19,9 @@ pub contract REVV: FungibleToken {
   // Event that is emitted when new tokens are minted
   pub event TokensMinted(amount: UFix64)
 
+  // The storage path for the Admin token
+  pub let RevvAdminStoragePath: StoragePath
+
   // The public path for the token balance
   pub let RevvBalancePublicPath: PublicPath
 
@@ -32,8 +34,13 @@ pub contract REVV: FungibleToken {
   // The private path for the token vault
   pub let RevvVaultPrivatePath: PrivatePath
 
+
   // The escrow vault for REVV from REVV vaults that were detroyed
-  access(account) let escrowVault: @REVV.Vault
+  access(contract) let escrowVault: @REVV.Vault
+
+  // Admin resource
+  //
+  pub resource Admin {}
 
   // Vault
   //
@@ -110,7 +117,6 @@ pub contract REVV: FungibleToken {
     return <-create Vault(balance: 0.0)
   }
 
-
   // depositToEscrow
   //
   // Function accessible from contract only, which desposits REVV into the escrow vault
@@ -154,6 +160,8 @@ pub contract REVV: FungibleToken {
 
     //Initialize the path fields
     //
+    self.RevvAdminStoragePath = /storage/revvAdmin
+
     self.RevvBalancePublicPath = /public/revvBalance
 
     self.RevvReceiverPublicPath = /public/revvReceiver
@@ -161,6 +169,12 @@ pub contract REVV: FungibleToken {
     self.RevvVaultStoragePath = /storage/revvVault
 
     self.RevvVaultPrivatePath = /private/revvVault
+
+    // create and store Admin resource 
+    // this resource is current not used by the contract, added in case
+    // needed in future
+    //
+    self.account.save(<- create Admin(), to: self.RevvAdminStoragePath)
 
     // create an escrow vault
     //
@@ -185,6 +199,11 @@ pub contract REVV: FungibleToken {
     self.account.link<&REVV.Vault{FungibleToken.Balance}>(
         self.RevvBalancePublicPath,
         target: self.RevvVaultStoragePath
+    )
+
+    self.account.link<&REVV.Vault{FungibleToken.Provider}>(
+      self.RevvVaultPrivatePath,
+      target: self.RevvVaultStoragePath
     )
 
     // Mint total supply
