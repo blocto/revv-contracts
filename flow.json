@@ -14,8 +14,8 @@
 				"mainnet": "0xf233dcee88fe0abe"
 			}
 		},
-		"RevvToken": {
-			"source": "./contracts/flow/RevvToken.cdc",
+		"REVV": {
+			"source": "./contracts/flow/REVV.cdc",
 			"aliases": {
 				"testnet": "0xe4106d2094661b92"
 			}

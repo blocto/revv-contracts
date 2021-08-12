@@ -1,5 +1,5 @@
 import FungibleToken from "./FungibleToken.cdc"
-import RevvToken from "./RevvToken.cdc"
+import REVV from "./REVV.cdc"
 
 pub contract TeleportCustody {
 
@@ -33,8 +33,8 @@ pub contract TeleportCustody {
   // Record teleported Ethereum hashes
   access(contract) var teleported: {String: Bool}
 
-  // Controls RevvToken vault
-  access(contract) let revvVault: @RevvToken.Vault
+  // Controls REVV vault
+  access(contract) let revvVault: @REVV.Vault
 
   pub resource Allowance {
     pub var balance: UFix64
@@ -73,7 +73,7 @@ pub contract TeleportCustody {
     // Function that deposits REVV token into the contract controlled
     // vault.
     //
-    pub fun depositRevv(from: @RevvToken.Vault) {
+    pub fun depositRevv(from: @REVV.Vault) {
       TeleportCustody.revvVault.deposit(from: <- from)
     }
 
@@ -95,7 +95,7 @@ pub contract TeleportCustody {
     // corresponding controller account on Ethereum
     pub var ethereumAdminAccount: [UInt8]
 
-    pub fun teleportOut(from: @RevvToken.Vault, to: [UInt8])
+    pub fun teleportOut(from: @REVV.Vault, to: [UInt8])
 
     pub fun depositAllowance(from: @Allowance)
   }
@@ -123,7 +123,7 @@ pub contract TeleportCustody {
     pub var allowedAmount: UFix64
 
     // receiver reference to collect teleport fee
-    pub let feeCollector: @RevvToken.Vault
+    pub let feeCollector: @REVV.Vault
 
     // fee collected when token is teleported from Ethereum to Flow
     pub var inwardFee: UFix64
@@ -169,13 +169,13 @@ pub contract TeleportCustody {
     // Note: the burned tokens are automatically subtracted from the 
     // total supply in the Vault destructor.
     //
-    pub fun teleportOut(from: @RevvToken.Vault, to: [UInt8]) {
+    pub fun teleportOut(from: @REVV.Vault, to: [UInt8]) {
       pre {
         !TeleportCustody.isFrozen: "Teleport service is frozen"
         to.length == 20: "Ethereum address should be 20 bytes"
       }
 
-      let vault <- from as! @RevvToken.Vault
+      let vault <- from as! @REVV.Vault
       let fee <- vault.withdraw(amount: self.outwardFee)
 
       self.feeCollector.deposit(from: <-fee)
@@ -219,7 +219,7 @@ pub contract TeleportCustody {
     init(allowedAmount: UFix64) {
       self.allowedAmount = allowedAmount
 
-      self.feeCollector <- RevvToken.createEmptyVault() as! @RevvToken.Vault
+      self.feeCollector <- REVV.createEmptyVault() as! @REVV.Vault
       self.inwardFee = 0.01
       self.outwardFee = 10.0
 
@@ -247,8 +247,8 @@ pub contract TeleportCustody {
     self.isFrozen = false
     self.teleported = {}
 
-    // Setup internal RevvToken vault
-    self.revvVault <- RevvToken.createEmptyVault() as! @RevvToken.Vault
+    // Setup internal REVV vault
+    self.revvVault <- REVV.createEmptyVault() as! @REVV.Vault
 
     let admin <- create Administrator()
     self.account.save(<-admin, to: self.AdminStoragePath)
