@@ -156,6 +156,8 @@ pub contract REVVVaultAccess {
     return self.guardToProxyMap.keys
   }
 
+  // returns max authorized amount of withdrawal for an account address
+  //
   pub fun getMaxAmountForAccount(vaultProxyAddress: Address): UFix64 {
     let paths = self.proxyToGuardMap[vaultProxyAddress]!
     let capability = self.account.getCapability<&REVVVaultAccess.VaultGuard>(paths.privatePath)
@@ -163,6 +165,8 @@ pub contract REVVVaultAccess {
     return vaultRef.max
   }
 
+  // revokes withdrawal capability for an account
+  //
   pub fun revokeVaultGuard(adminRef: &Admin, vaultProxyAddress: Address){
     pre {
       adminRef != nil : "adminRef is nil"
