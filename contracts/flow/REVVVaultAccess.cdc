@@ -20,8 +20,8 @@ import REVV from "./REVV"
 // * The REVV vault owner creates a VaultGuard resource with a max amount and an address for the other account that will withdraw the REVV.
 // * The other account creates and saves a VaultProxy resource
 // * The REVV owner sets the VaultGuard capability on the VaultProxy
-// * The other account can now withdraw REVV
-// * The REVV owner can revoke access at any time
+// * The other account can now withdraw REVV from the VaultProxy
+// * The REVV owner can revoke access at any time by unlinking the VaultGuard capability
 //
 pub contract REVVVaultAccess {
 
