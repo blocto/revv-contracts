@@ -1,4 +1,4 @@
-import REVVVaultAccess from 0xREVVVaultAccess
+import REVVVaultAccess from "../contracts/flow/REVVVaultAccess.cdc"
 
 transaction(maxAmount: UFix64) {
     prepare(acct: AuthAccount) {
