@@ -6,7 +6,4 @@ transaction {
         acct.save(<- vaultProxy, to: REVVVaultAccess.VaultProxyStoragePath)
         acct.link<&REVVVaultAccess.VaultProxy{REVVVaultAccess.VaultProxyPublic}>(REVVVaultAccess.VaultProxyPublicPath, target: REVVVaultAccess.VaultProxyStoragePath)
     }
-    execute {
-
-    }
 }

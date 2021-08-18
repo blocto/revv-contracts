@@ -17,7 +17,13 @@
 		"REVV": {
 			"source": "./contracts/flow/REVV.cdc",
 			"aliases": {
-				"testnet": "0xe4106d2094661b92"
+				"testnet": "0x14ca72fa4d45d2c3"
+			}
+		},
+		"REVVVaultAccess": {
+			"source": "./contracts/flow/REVVVaultAccess.cdc",
+			"aliases": {
+				"testnet": "0x14ca72fa4d45d2c3"
 			}
 		},
 		"TeleportCustody": "./contracts/flow/TeleportCustody.cdc"
