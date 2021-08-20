@@ -98,6 +98,8 @@ pub contract TeleportCustody {
     pub fun teleportOut(from: @REVV.Vault, to: [UInt8])
 
     pub fun depositAllowance(from: @Allowance)
+
+    pub fun getFeeAmount(): UFix64
   }
 
   pub resource interface TeleportControl {
