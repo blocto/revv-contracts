@@ -231,7 +231,7 @@ pub contract TeleportCustody {
     }
   }
 
-  pub fun getRevvBalance(): UFix64 {
+  pub fun getLockedVaultBalance(): UFix64 {
     return TeleportCustody.revvVault.balance
   }
 
