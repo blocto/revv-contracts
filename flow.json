@@ -17,13 +17,15 @@
 		"REVV": {
 			"source": "./contracts/flow/REVV.cdc",
 			"aliases": {
-				"testnet": "0x14ca72fa4d45d2c3"
+				"testnet": "0x14ca72fa4d45d2c3",
+				"mainnet": "0xffac90da395bd864"
 			}
 		},
 		"REVVVaultAccess": {
 			"source": "./contracts/flow/REVVVaultAccess.cdc",
 			"aliases": {
-				"testnet": "0x14ca72fa4d45d2c3"
+				"testnet": "0x14ca72fa4d45d2c3",
+				"mainnet": "0xffac90da395bd864"
 			}
 		},
 		"TeleportCustody": "./contracts/flow/TeleportCustody.cdc"
@@ -67,11 +69,22 @@
 				}
 			],
 			"chain": "flow-testnet"
-		}
+		},
+    "revv-admin-mainnet": {
+      "fromFile": "./flow.mainnet.json"
+    },
+    "deployer-mainnet": {
+      "fromFile": "./flow.mainnet.json"
+    }
 	},
 	"deployments": {
 		"testnet": {
 			"revv-admin-testnet": [
+				"TeleportCustody"
+			]
+		},
+		"mainnet": {
+			"revv-admin-mainnet": [
 				"TeleportCustody"
 			]
 		}
