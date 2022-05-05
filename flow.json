@@ -18,14 +18,14 @@
 			"source": "./contracts/flow/REVV.cdc",
 			"aliases": {
 				"testnet": "0x14ca72fa4d45d2c3",
-				"mainnet": "0xffac90da395bd864"
+				"mainnet": "0xd01e482eb680ec9f"
 			}
 		},
 		"REVVVaultAccess": {
 			"source": "./contracts/flow/REVVVaultAccess.cdc",
 			"aliases": {
 				"testnet": "0x14ca72fa4d45d2c3",
-				"mainnet": "0xffac90da395bd864"
+				"mainnet": "0xd01e482eb680ec9f"
 			}
 		},
 		"TeleportCustody": "./contracts/flow/TeleportCustody.cdc"
@@ -41,7 +41,7 @@
 			"keys": "a3fedbc0837fc67cac491f704508e82e590ac32eaad3ef7ec2cac492f5ce734a"
 		},
 		"revv-admin-testnet": {
-			"address": "e9008c00f410c92b",
+			"address": "0xe9008c00f410c92b",
 			"keys": [
 				{
 					"type": "hex",
@@ -56,7 +56,7 @@
 			"chain": "flow-testnet"
 		},
 		"revv-teleport-admin-testnet": {
-			"address": "205d4db4d4592a73",
+			"address": "0x205d4db4d4592a73",
 			"keys": [
 				{
 					"type": "hex",
@@ -71,6 +71,9 @@
 			"chain": "flow-testnet"
 		},
     "revv-admin-mainnet": {
+      "fromFile": "./flow.mainnet.json"
+    },
+		"revv-teleport-admin-mainnet": {
       "fromFile": "./flow.mainnet.json"
     },
     "deployer-mainnet": {

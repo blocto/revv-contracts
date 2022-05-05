@@ -100,6 +100,8 @@ pub contract TeleportCustody {
     pub fun depositAllowance(from: @Allowance)
 
     pub fun getFeeAmount(): UFix64
+
+    pub fun getEthereumAdminAccount(): [UInt8]
   }
 
   pub resource interface TeleportControl {
@@ -216,6 +218,10 @@ pub contract TeleportCustody {
       self.allowedAmount = self.allowedAmount + from.balance
 
       destroy from
+    }
+
+    pub fun getEthereumAdminAccount(): [UInt8] {
+      return self.ethereumAdminAccount
     }
 
     init(allowedAmount: UFix64) {
