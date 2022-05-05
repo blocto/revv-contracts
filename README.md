@@ -59,3 +59,10 @@ flow transactions send ./transactions/teleportIn.cdc \
   --signer revv-teleport-admin-testnet \
   --gas-limit 1000
 ```
+
+### Replenish REVV and allowance
+```
+flow transactions send ./transactions/replenishTeleportRevv.cdc 0x08a13c66a11dea60 500000.0 \
+  --signer revv-admin-mainnet \
+  --network mainnet
+```
