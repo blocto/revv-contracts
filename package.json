@@ -16,7 +16,7 @@
     "test:ethereum": "truffle test"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "3.2.0",
+    "@openzeppelin/contracts": "4.7.2",
     "ganache-cli": "^6.12.1",
     "truffle": "^5.1.52",
     "truffle-hdwallet-provider": "^1.0.17"
