@@ -279,12 +279,12 @@ contract TeleportCustody {
       self.allowedAmount = self.allowedAmount + from.balance
       destroy from
     }
-    
+
     access(all)
     fun getEthereumAdminAccount(): [UInt8] {
       return self.ethereumAdminAccount
     }
-    
+
     init(allowedAmount: UFix64) {
       self.allowedAmount = allowedAmount
       self.feeCollector <- REVV.createEmptyVault(vaultType: Type<@REVV.Vault>()) as! @REVV.Vault
@@ -293,7 +293,7 @@ contract TeleportCustody {
       self.ethereumAdminAccount = []
     }
   }
-  
+
   access(all)
   fun getLockedVaultBalance(): UFix64 {
     let vaultRef =
@@ -301,19 +301,19 @@ contract TeleportCustody {
       ?? panic("Could not borrow reference to the owner's Vault!")
     return vaultRef.balance
   }
-  
+
   init() {
-    
+
     // Initialize the path fields
     self.AdminStoragePath = /storage/revvTeleportCustodyAdmin
     self.TeleportAdminStoragePath = /storage/revvTeleportCustodyTeleportAdmin
     self.TeleportUserPublicPath = /public/revvTeleportCustodyTeleportUser
     self.TeleportAdminPrivatePath = /private/revvTeleportCustodyTeleportAdmin
-    
+
     // Initialize contract variables
     self.isFrozen = false
-    self.teleported ={} 
-    
+    self.teleported = {}
+
     // Setup internal REVV vault
     self.revvVault <- REVV.createEmptyVault(vaultType: Type<@REVV.Vault>()) as! @REVV.Vault
     let admin <- create Administrator()
