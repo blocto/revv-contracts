@@ -1,15 +1,15 @@
-import FungibleToken from "../contracts/flow/FungibleToken.cdc"
-import REVV from "../contracts/flow/REVV.cdc"
+import "FungibleToken"
+import "REVV"
 
 transaction(amount: UFix64, to: Address) {
 
     // The Vault resource that holds the tokens that are being transferred
-    let sentVault: @FungibleToken.Vault
+    let sentVault: @{FungibleToken.Vault}
 
-    prepare(signer: AuthAccount) {
+    prepare(signer: auth(BorrowValue) &Account) {
 
         // Get a reference to the signer's stored vault
-        let vaultRef = signer.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath)
+        let vaultRef = signer.storage.borrow<auth(FungibleToken.Withdraw) &REVV.Vault>(from: REVV.RevvVaultStoragePath)
 			?? panic("Could not borrow reference to the owner's Vault!")
 
         // Withdraw tokens from the signer's stored vault
@@ -22,8 +22,7 @@ transaction(amount: UFix64, to: Address) {
         let recipient = getAccount(to)
 
         // Get a reference to the recipient's Receiver
-        let receiverRef = recipient.getCapability(REVV.RevvReceiverPublicPath)
-            .borrow<&{FungibleToken.Receiver}>()
+        let receiverRef = recipient.capabilities.borrow<&{FungibleToken.Receiver}>(REVV.RevvReceiverPublicPath)
 			?? panic("Could not borrow receiver reference to the recipient's Vault")
 
         // Deposit the withdrawn tokens in the recipient's receiver

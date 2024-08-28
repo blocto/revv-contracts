@@ -1,30 +1,22 @@
-import FungibleToken from "../contracts/flow/FungibleToken.cdc"
-import REVV from "../contracts/flow/REVV.cdc"
+import "FungibleToken"
+import "REVV"
 
 transaction {
 
-    prepare(signer: AuthAccount) {
+    prepare(signer: auth(Storage, Capabilities) &Account) {
 
         // If the account is already set up that's not a problem, but we don't want to replace it
-        if(signer.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath) != nil) {
+        if(signer.storage.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath) != nil) {
             return
         }
         
         // Create a new Blocto Token Vault and put it in storage
-        signer.save(<-REVV.createEmptyVault(), to: REVV.RevvVaultStoragePath)
+        signer.storage.save(<- REVV.createEmptyVault(vaultType: Type<@REVV.Vault>()), to: REVV.RevvVaultStoragePath)
 
-        // Create a public capability to the Vault that only exposes
-        // the deposit function through the Receiver interface
-        signer.link<&REVV.Vault{FungibleToken.Receiver}>(
-            REVV.RevvReceiverPublicPath,
-            target: REVV.RevvVaultStoragePath
-        )
+        let receiverCapability = signer.capabilities.storage.issue<&{FungibleToken.Receiver}>(REVV.RevvVaultStoragePath)
+        signer.capabilities.publish(receiverCapability, at: REVV.RevvReceiverPublicPath)
 
-        // Create a public capability to the Vault that only exposes
-        // the balance field through the Balance interface
-        signer.link<&REVV.Vault{FungibleToken.Balance}>(
-            REVV.RevvBalancePublicPath,
-            target: REVV.RevvVaultStoragePath
-        )
+        let balanceCapability = signer.capabilities.storage.issue<&{FungibleToken.Balance}>(REVV.RevvVaultStoragePath)
+        signer.capabilities.publish(balanceCapability, at: REVV.RevvBalancePublicPath)
     }
 }
