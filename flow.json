@@ -5,14 +5,14 @@
 			"aliases": {
 				"mainnet": "d01e482eb680ec9f",
 				"testing": "0000000000000007",
-				"testnet": "14ca72fa4d45d2c3"
+				"testnet": "9c97c49c842d0cd1"
 			}
 		},
 		"REVVVaultAccess": {
 			"source": "./contracts/flow/REVVVaultAccess.cdc",
 			"aliases": {
 				"mainnet": "d01e482eb680ec9f",
-				"testnet": "14ca72fa4d45d2c3"
+				"testnet": "9c97c49c842d0cd1"
 			}
 		},
 		"TeleportCustody": {
@@ -20,7 +20,7 @@
 			"aliases": {
 				"mainnet": "04ee69443dedf0e4",
 				"testing": "0000000000000007",
-				"testnet": "e9008c00f410c92b"
+				"testnet": "95f914a6c51814de"
 			}
 		}
 	},
@@ -135,12 +135,8 @@
 			}
 		},
 		"revv-admin-testnet": {
-			"address": "e9008c00f410c92b",
-			"key": {
-				"type": "hex",
-				"signatureAlgorithm": "ECDSA_secp256k1",
-				"privateKey": "6c5726cb889f8882dce508406f6f28398267da7215440c5ee8cfa5206a311bc8"
-			}
+			"address": "95f914a6c51814de",
+			"key": "55872db130f1fce22e3efa45a9f858e861fc28375fcd8f30e244fe5664c0c387"
 		},
 		"revv-teleport-admin-mainnet": {
 			"address": "205d4db4d4592a73",
@@ -150,12 +146,12 @@
 			}
 		},
 		"revv-teleport-admin-testnet": {
-			"address": "205d4db4d4592a73",
-			"key": {
-				"type": "hex",
-				"signatureAlgorithm": "ECDSA_secp256k1",
-				"privateKey": "e0d4697cc31155984a2adb552b43f48e0d35f570b30b8a61de02ed7139e29986"
-			}
+			"address": "719ead7bd4e21401",
+			"key": "4d7e3906af7d6916e2c66a5682d9b25c3b0b516d5f4464b976692085aa4007e6"
+		},
+		"revv-teleport-user-testnet": {
+			"address": "740bb43732a3469b",
+			"key": "fb63a650cdb3c7ea4c42155fcf8926d94d988dbb2e4e05f5eb3d15b909b5f5af"
 		}
 	},
 	"deployments": {
