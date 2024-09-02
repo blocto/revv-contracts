@@ -37,58 +37,63 @@ access(all) contract REVV: FungibleToken {
   // The private path for the token vault
   access(all) let RevvVaultPrivatePath: PrivatePath
 
-    access(all) view fun getContractViews(resourceType: Type?): [Type] {
-        return [
-            Type<FungibleTokenMetadataViews.FTView>(),
-            Type<FungibleTokenMetadataViews.FTDisplay>(),
-            Type<FungibleTokenMetadataViews.FTVaultData>(),
-            Type<FungibleTokenMetadataViews.TotalSupply>()
-        ]
-    }
+  // The 'private path' for the provider capability 
+  access(all) view fun getProviderPath(): StoragePath {
+    return /storage/revvVaultProvider
+  }
 
-    access(all) fun resolveContractView(resourceType: Type?, viewType: Type): AnyStruct? {
-        switch viewType {
-            case Type<FungibleTokenMetadataViews.FTView>():
-                return FungibleTokenMetadataViews.FTView(
-                    ftDisplay: self.resolveContractView(resourceType: nil, viewType: Type<FungibleTokenMetadataViews.FTDisplay>()) as! FungibleTokenMetadataViews.FTDisplay?,
-                    ftVaultData: self.resolveContractView(resourceType: nil, viewType: Type<FungibleTokenMetadataViews.FTVaultData>()) as! FungibleTokenMetadataViews.FTVaultData?
-                )
-            case Type<FungibleTokenMetadataViews.FTDisplay>():
-                let media: MetadataViews.Media = MetadataViews.Media(
-                        file: MetadataViews.HTTPFile(
-                        url: "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
-                    ),
-                    mediaType: "image/svg+xml"
-                )
-                let medias: MetadataViews.Medias = MetadataViews.Medias([media])
-                return FungibleTokenMetadataViews.FTDisplay(
-                    name: "REVV",
-                    symbol: "REVV",
-                    description: "The native token of the Motorverse ecosystem, providing utility, medium of exchange and store of value. Seeded by Animoca Brands.",
-                    externalURL: MetadataViews.ExternalURL("https://motorverse.com"),
-                    logos: medias,
-                    socials: {
-                        "twitter": MetadataViews.ExternalURL("https://twitter.com/REVV_Token")
-                    }
-                )
-            case Type<FungibleTokenMetadataViews.FTVaultData>():
-                return FungibleTokenMetadataViews.FTVaultData(
-                    storagePath: self.RevvVaultStoragePath,
-                    receiverPath: self.RevvReceiverPublicPath,
-                    metadataPath: self.RevvBalancePublicPath,
-                    receiverLinkedType: Type<&REVV.Vault>(),
-                    metadataLinkedType: Type<&REVV.Vault>(),
-                    createEmptyVaultFunction: (fun(): @{FungibleToken.Vault} {
-                        return <-REVV.createEmptyVault(vaultType: Type<@REVV.Vault>())
-                    })
-                )
-            case Type<FungibleTokenMetadataViews.TotalSupply>():
-                return FungibleTokenMetadataViews.TotalSupply(
-                    totalSupply: REVV.totalSupply
-                )
-        }
-        return nil
-    }
+  access(all) view fun getContractViews(resourceType: Type?): [Type] {
+      return [
+          Type<FungibleTokenMetadataViews.FTView>(),
+          Type<FungibleTokenMetadataViews.FTDisplay>(),
+          Type<FungibleTokenMetadataViews.FTVaultData>(),
+          Type<FungibleTokenMetadataViews.TotalSupply>()
+      ]
+  }
+
+  access(all) view fun resolveContractView(resourceType: Type?, viewType: Type): AnyStruct? {
+      switch viewType {
+          case Type<FungibleTokenMetadataViews.FTView>():
+              return FungibleTokenMetadataViews.FTView(
+                  ftDisplay: self.resolveContractView(resourceType: nil, viewType: Type<FungibleTokenMetadataViews.FTDisplay>()) as! FungibleTokenMetadataViews.FTDisplay?,
+                  ftVaultData: self.resolveContractView(resourceType: nil, viewType: Type<FungibleTokenMetadataViews.FTVaultData>()) as! FungibleTokenMetadataViews.FTVaultData?
+              )
+          case Type<FungibleTokenMetadataViews.FTDisplay>():
+              let media: MetadataViews.Media = MetadataViews.Media(
+                      file: MetadataViews.HTTPFile(
+                      url: "https://motorverse.s3.eu-north-1.amazonaws.com/REVV.svg"
+                  ),
+                  mediaType: "image/svg+xml"
+              )
+              let medias: MetadataViews.Medias = MetadataViews.Medias([media])
+              return FungibleTokenMetadataViews.FTDisplay(
+                  name: "REVV",
+                  symbol: "REVV",
+                  description: "The native token of the Motorverse ecosystem, providing utility, medium of exchange and store of value. Seeded by Animoca Brands.",
+                  externalURL: MetadataViews.ExternalURL("https://motorverse.com"),
+                  logos: medias,
+                  socials: {
+                      "twitter": MetadataViews.ExternalURL("https://twitter.com/REVV_Token")
+                  }
+              )
+          case Type<FungibleTokenMetadataViews.FTVaultData>():
+              return FungibleTokenMetadataViews.FTVaultData(
+                  storagePath: self.RevvVaultStoragePath,
+                  receiverPath: self.RevvReceiverPublicPath,
+                  metadataPath: self.RevvBalancePublicPath,
+                  receiverLinkedType: Type<&REVV.Vault>(),
+                  metadataLinkedType: Type<&REVV.Vault>(),
+                  createEmptyVaultFunction: (fun(): @{FungibleToken.Vault} {
+                      return <-REVV.createEmptyVault(vaultType: Type<@REVV.Vault>())
+                  })
+              )
+          case Type<FungibleTokenMetadataViews.TotalSupply>():
+              return FungibleTokenMetadataViews.TotalSupply(
+                  totalSupply: REVV.totalSupply
+              )
+      }
+      return nil
+  }
 
   // The escrow vault for REVV from REVV vaults that were detroyed
   access(contract) let escrowVault: @REVV.Vault
@@ -109,7 +114,7 @@ access(all) contract REVV: FungibleToken {
   // out of thin air.
   //
   access(all) resource Vault: FungibleToken.Vault {
-
+    
     // holds the balance of a users tokens
     access(all) var balance: UFix64
 
@@ -120,7 +125,7 @@ access(all) contract REVV: FungibleToken {
 
     // destroy
     //
-    // Burning in the sense of reducing total supply is prevented by overriding the Vault's destroy method
+    // Burning in the sense of reducing total supply is prevented by overriding the Vault's destroy method 
     // and transferring the balance to the REVV contract's escrow vault
     //
     access(contract) fun burnCallback() {
@@ -134,7 +139,7 @@ access(all) contract REVV: FungibleToken {
         return REVV.getContractViews(resourceType: nil)
     }
 
-    access(all) fun resolveView(_ view: Type): AnyStruct? {
+    access(all) view fun resolveView(_ view: Type): AnyStruct? {
         return REVV.resolveContractView(resourceType: nil, viewType: view)
     }
 
@@ -215,8 +220,8 @@ access(all) contract REVV: FungibleToken {
     return self.escrowVault.balance
   }
 
-  // mint
-  //
+  // mint 
+  // 
   // Can only be called by contract.
   // Total minted amount can never exceed MAX_SUPPLY
   //
@@ -249,7 +254,7 @@ access(all) contract REVV: FungibleToken {
     // Init supply fields
     //
     self.totalSupply = 0.0
-    self.MAX_SUPPLY = 3000000000.0
+    self.MAX_SUPPLY = 3_000_000_000.0
 
     //Initialize the path fields
     //
@@ -263,7 +268,7 @@ access(all) contract REVV: FungibleToken {
 
     self.RevvVaultPrivatePath = /private/revvVault
 
-    // create and store Admin resource
+    // create and store Admin resource 
     // this resource is current not used by the contract, added in case
     // needed in future
     //
@@ -285,7 +290,7 @@ access(all) contract REVV: FungibleToken {
       self.RevvVaultStoragePath
     )
     self.account.capabilities.publish(receiverCap, at: self.RevvReceiverPublicPath)
-
+    
     // Create a public capability to the stored Vault that only exposes
     // the `balance` field through the `Balance` interface
     //
@@ -294,12 +299,15 @@ access(all) contract REVV: FungibleToken {
     )
     self.account.capabilities.publish(balanceCap, at: self.RevvBalancePublicPath)
 
-    // Create a private capability to the stored Vault
+    // Create a "private provider" capability (authorized to Withdraw) to the stored Vault
     //
-    let providerCap: Capability<&REVV.Vault> = self.account.capabilities.storage.issue<&REVV.Vault>(
+    let providerCap: Capability<&REVV.Vault> = self.account.capabilities.storage.issue<auth(FungibleToken.Withdraw) &REVV.Vault>(
       self.RevvVaultStoragePath
     )
 
+    // Save the 'private provider' capability to storage
+    self.account.storage.save(providerCap, to: REVV.getProviderPath())
+    
     // Mint total supply
     //
     self.mint(amount: self.MAX_SUPPLY)
