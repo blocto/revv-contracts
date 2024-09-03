@@ -96,18 +96,12 @@ contract TeleportCustody {
     //
     access(AdministratorEntitlement)
     fun depositRevv(from: @REVV.Vault) {
-      let vaultRef =
-        TeleportCustody.account.storage.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath)
-        ?? panic("Could not borrow reference to the owner's Vault!")
-      vaultRef.deposit(from: <-from)
+      TeleportCustody.revvVault.deposit(from: <-from)
     }
     
     access(AdministratorEntitlement)
     fun withdrawRevv(amount: UFix64): @{FungibleToken.Vault} {
-      let vaultRef =
-        TeleportCustody.account.storage.borrow<auth(FungibleToken.Withdraw) &REVV.Vault>(from: REVV.RevvVaultStoragePath)
-        ?? panic("Could not borrow reference to the owner's Vault!")
-      return <- vaultRef.withdraw(amount: amount)
+      return <- TeleportCustody.revvVault.withdraw(amount: amount)
     }
   }
   
@@ -210,13 +204,16 @@ contract TeleportCustody {
           "Same hash already teleported"
       }
       self.allowedAmount = self.allowedAmount - amount
+
       TeleportCustody.teleported[hash] = true
       emit TokensTeleportedIn(amount: amount, from: from, hash: hash)
-      let vaultRef = TeleportCustody.account.storage.borrow<auth(FungibleToken.Withdraw) &REVV.Vault>(from: REVV.RevvVaultStoragePath) ?? panic("Could not borrow reference to the owner's Vault!")
-      let vault <- vaultRef.withdraw(amount: amount)
+
+      let vault <- TeleportCustody.revvVault.withdraw(amount: amount)
       let fee <- vault.withdraw(amount: self.inwardFee)
+
       self.feeCollector.deposit(from: <-fee)
       emit FeeCollected(amount: self.inwardFee, type: 1)
+
       return <-vault
     }
     
@@ -237,11 +234,12 @@ contract TeleportCustody {
       }
       let vault <- from
       let fee <- vault.withdraw(amount: self.outwardFee)
+
       self.feeCollector.deposit(from: <-fee)
       emit FeeCollected(amount: self.outwardFee, type: 0)
+
       let amount = vault.balance
-      let vaultRef = TeleportCustody.account.storage.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath) ?? panic("Could not borrow reference to the owner's Vault!")
-      vaultRef.deposit(from: <-vault)
+      TeleportCustody.revvVault.deposit(from: <-vault)
       emit TokensTeleportedOut(amount: amount, to: to)
     }
     
@@ -296,10 +294,7 @@ contract TeleportCustody {
 
   access(all)
   fun getLockedVaultBalance(): UFix64 {
-    let vaultRef =
-      TeleportCustody.account.storage.borrow<&REVV.Vault>(from: REVV.RevvVaultStoragePath)
-      ?? panic("Could not borrow reference to the owner's Vault!")
-    return vaultRef.balance
+    return TeleportCustody.revvVault.balance
   }
 
   init() {
@@ -316,6 +311,7 @@ contract TeleportCustody {
 
     // Setup internal REVV vault
     self.revvVault <- REVV.createEmptyVault(vaultType: Type<@REVV.Vault>()) as! @REVV.Vault
+	
     let admin <- create Administrator()
     self.account.storage.save(<-admin, to: self.AdminStoragePath)
   }
