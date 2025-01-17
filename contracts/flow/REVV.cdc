@@ -73,7 +73,7 @@ access(all) contract REVV: FungibleToken {
                   externalURL: MetadataViews.ExternalURL("https://motorverse.com"),
                   logos: medias,
                   socials: {
-                      "twitter": MetadataViews.ExternalURL("https://twitter.com/REVV_Token")
+                      "twitter": MetadataViews.ExternalURL("https://x.com/REVV_Token")
                   }
               )
           case Type<FungibleTokenMetadataViews.FTVaultData>():
